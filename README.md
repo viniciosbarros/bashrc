@@ -8,10 +8,13 @@ I created this repository of only one file, to be able to maintain coherence bet
 READ ME:
 
 to clone: 
+
           mkdir MY_BASHRC
           cd MY_BASHRC
           git clone https://github.com/viniciosbarros/bashrc .
- or just:
+
+or just:
+
           git clone https://github.com/viniciosbarros/bashrc .
           
 
