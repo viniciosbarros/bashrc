@@ -9,11 +9,11 @@
 #sudo wget --proxy=on --proxy-user="vinicios.silva" --proxy-password="hpco2039@" http://www.fvue.nl/cdots/cdots-1.2.1.txt
 #cp cdots-1.2.1.txt ~/.cdots-1.2.1.sh && /bin/rm -f cdots-1.2.1.txt
 source ~/.cdots-1.2.1.sh
+#Keep passwd and paths in another file
+source ~/.Environment_variables.sh
 
 #echo "Let me stand next to your fire" | cowsay -f dragon
 
-USUARIODIGITEL="vinicios.silva"
-SENHADIGITEL="hpxo2039!"
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
@@ -317,16 +317,12 @@ function au()
 ########################################################################
 # LICENSES PARA AS FERRAMENTAS DE CAD
 ########################################################################
-export MGLS_LICENSE_FILE=27004@naxos.inf.pucrs.br
-export CCSS_KEYS=27000@naxos.inf.pucrs.br
-export SNPSLMD_LICENSE_FILE=27000@naxos.inf.pucrs.br
-export XILINXD_LICENSE_FILE=2100@naxos.inf.pucrs.br
+
 
 ############################################
 # INCLUSAO DAS FERRAMENTAS NO PATH #
 ############################################
-export PATH=$PATH:/soft/modeltech/bin
-#source /opt/Xilinx/11.4/settings32.sh
+
 
 ###########################################
 # modificações de configuração do shell
@@ -365,5 +361,5 @@ alias lock='gnome-screensaver-command -l'
 #######
 #coisas perigosas
 #######
-/home/vinicios/scripts/bearSSH/dog.sh &
+#/home/vinicios/scripts/bearSSH/dog.sh &
 
