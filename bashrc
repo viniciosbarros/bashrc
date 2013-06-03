@@ -9,11 +9,13 @@
 #sudo wget --proxy=on --proxy-user="vinicios.silva" --proxy-password="hpco2039@" http://www.fvue.nl/cdots/cdots-1.2.1.txt
 #cp cdots-1.2.1.txt ~/.cdots-1.2.1.sh && /bin/rm -f cdots-1.2.1.txt
 source ~/.cdots-1.2.1.sh
-#Keep passwd and paths in another file
-source ~/.Environment_variables.sh
+#Environment Variables
+source ~/.Env_Var.sh
+#source .netrc (pass and user)
+#source ~/.netrc
+
 
 #echo "Let me stand next to your fire" | cowsay -f dragon
-
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
@@ -50,7 +52,7 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-  # We have color support; assume it's compliant with Ecma-48
+	# We have color support; assume it's compliant with Ecma-48
 	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
 	# a case would tend to support setf rather than setaf.)
 	color_prompt=yes
@@ -201,7 +203,14 @@ function snn() # Set IP in a new net
 		echo " Try: "
 		echo "   snn  <networkAlias> "
 	else
-		sudo /sbin/ifconfig eth0:$1 192.168.$1.100
+		PREFIX=`/sbin/ifconfig eth0 | awk '/inet/ { print $2 } ' | sed -e s/addr:// |
+		sed '/./!d' | sed 's/?\|,\|\.\|!\|:/ /g' | awk '{ print $4 } '`
+		if [ -z $PREFIX ]; then
+		    PREFIX=$(( $RANDOM % 255 ))
+		    sudo /sbin/ifconfig eth0:$1 192.168.$1.$PREFIX
+		else
+		    sudo /sbin/ifconfig eth0:$1 192.168.$1.$PREFIX
+		fi
 	fi
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -318,11 +327,9 @@ function au()
 # LICENSES PARA AS FERRAMENTAS DE CAD
 ########################################################################
 
-
 ############################################
 # INCLUSAO DAS FERRAMENTAS NO PATH #
 ############################################
-
 
 ###########################################
 # modificações de configuração do shell
@@ -361,5 +368,5 @@ alias lock='gnome-screensaver-command -l'
 #######
 #coisas perigosas
 #######
-#/home/vinicios/scripts/bearSSH/dog.sh &
+/home/vinicios/scripts/bearSSH/dog.sh &
 
