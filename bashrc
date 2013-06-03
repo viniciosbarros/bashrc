@@ -9,6 +9,7 @@
 #sudo wget --proxy=on --proxy-user="vinicios.silva" --proxy-password="hpco2039@" http://www.fvue.nl/cdots/cdots-1.2.1.txt
 #cp cdots-1.2.1.txt ~/.cdots-1.2.1.sh && /bin/rm -f cdots-1.2.1.txt
 source ~/.cdots-1.2.1.sh
+#Keep passwd and paths in another file
 #Environment Variables
 source ~/.Env_Var.sh
 #source .netrc (pass and user)
