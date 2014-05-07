@@ -5,18 +5,27 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-#Sets an alternative procedure to 'cd ../../..' just shoot '....' adding a . makes a jump backward
-#sudo wget --proxy=on --proxy-user="vinicios.silva" --proxy-password="hpco2039@" http://www.fvue.nl/cdots/cdots-1.2.1.txt
-#cp cdots-1.2.1.txt ~/.cdots-1.2.1.sh && /bin/rm -f cdots-1.2.1.txt
-source ~/.cdots-1.2.1.sh
-#Keep passwd and paths in another file
-#Environment Variables
-source ~/.Env_Var.sh
-#source .netrc (pass and user)
-#source ~/.netrc
+export TERM=xterm-256color
 
+#set the umask value
+#umask 002
+
+# Global variables:
+LAST_DIR=~
+
+#Sets an alternative procedure to 'cd ../../..' just shoot '....' adding a . makes a jump backward
+#sudo wget http://www.fvue.nl/cdots/cdots-1.2.1.txt
+#cp cdots-1.2.1.txt ~/.cdots-1.2.1.sh && /bin/rm -f cdots-1.2.1.txt
+if [ -e ~/.cdots-1.2.1.sh ]; then
+	source ~/.cdots-1.2.1.sh
+else
+	echo "Quer instalar cdots?"
+fi
 
 #echo "Let me stand next to your fire" | cowsay -f dragon
+
+USUARIO="vinicios.silva"
+SENHA=""
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # don't overwrite GNU Midnight Commander's setting of `ignorespace'.
@@ -122,7 +131,9 @@ alias make=colormake
 ###############################################################################################
 ###############################################################################################
 ###############################################################################################
-function cd() { builtin cd $1; ls; }
+function cd() { LAST_DIR=`pwd`; builtin cd $1; ls; }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function back() { builtin cd $LAST_DIR ; ls; }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function chmod()
 {
@@ -139,7 +150,7 @@ else
 fi
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function aguaquente() # Start a timer to check warming of water
+function aguaquente() # Start a timer to check warming of water for tea
 {
 	if [ $# -ne 0 -o -z $1 ]; then
 		sleep $1
@@ -152,7 +163,7 @@ function aguaquente() # Start a timer to check warming of water
 	fi
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function cherami() # Send text file using nc and cat
+function cherami() # Send file using nc and cat
 {
 VAL=2
 	if [ $# -ne 2 -o -z $1 ]; then
@@ -190,7 +201,7 @@ function headquarter() # Receive text file using nc and cat
 	fi
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function ip() # Get IP adresses.
+function ipl() # Get IP adresses.
 {
 	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     /sbin/ifconfig | awk '/inet/ { print $2 } ' | sed -e s/addr:// | sed '/^$/d'
@@ -204,27 +215,33 @@ function snn() # Set IP in a new net
 		echo " Try: "
 		echo "   snn  <networkAlias> "
 	else
-		PREFIX=`/sbin/ifconfig eth0 | awk '/inet/ { print $2 } ' | sed -e s/addr:// |
-		sed '/./!d' | sed 's/?\|,\|\.\|!\|:/ /g' | awk '{ print $4 } '`
-		if [ -z $PREFIX ]; then
-		    PREFIX=$(( $RANDOM % 255 ))
-		    sudo /sbin/ifconfig eth0:$1 192.168.$1.$PREFIX
-		else
-		    sudo /sbin/ifconfig eth0:$1 192.168.$1.$PREFIX
-		fi
+		sudo /sbin/ifconfig eth0:$1 192.168.$1.80
 	fi
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function rmv()
+function rm()
 {
-	mv -t ~/.local/share/Trash/files $1
+	if [ -e ~/.local/share/Trash/files ]; then
+		mv -t ~/.local/share/Trash/files $@
+		echo "Enviado para lixeira"
+	else
+		echo "Lixeira nao encontrada. Deseja Criar? [y/n]"
+		read option
+		if [ $option = "y" ]; then
+			mkdir -p ~/.local/share/Trash/files
+		else
+			echo "Duvidas? Verifique o bashrc"
+		fi
+
+	fi
+
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# You always suffers to remember the correct parameters or commands to
-# unpack the fucking tarball, your problems have ended!
-# just use your new "master universal Chuck Norris can opener - MUChuNCaO"
-# for a reasonable small price.
-# batteries not included ;)
+function lixeira()
+{
+	ls -l ~/.local/share/Trash/files
+} 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 canopener()
 {
     for file in "$@"
@@ -233,15 +250,15 @@ canopener()
         then
             case "$file" in
                 *.tar.bz2|*.tbz2) tar xvjf "$file";;
-                *.tar.gz|*.tgz) tar xvzf "$file";;
-                *.bz2) bunzip2 "$file";;
+                *.tar.gz|*.tgz) tar xvzf "$file";; 
+				*.tar.xz) tar xvf "$file";;
+				*.bz2) bunzip2 "$file";;
                 *.rar) rar x "$file";;
                 *.gz) gunzip "$file";;
                 *.tar) tar xvf "$file";;
                 *.zip) unzip "$file";;
                 *.Z) uncompress "$file";;
                 *.7z) 7z x "$file";;
-                *.tar.xz) tar -xvJf "$file";;
                 *) echo "Sorry bro! I don't know how to expand this '$file'...";;
             esac || echo "File $file is corrupted"
         else
@@ -254,7 +271,7 @@ function tempoloko()
 {
 declare -a WEATHERARRAY
 echo " "
-lynx -pauth=$USUARIODIGITEL:$SENHADIGITEL -dump "http://tempo.folha.com.br/rs/porto_alegre/" | grep -A 5 -m 1 "TEMPO AGORA"
+lynx -dump "http://tempo.folha.com.br/rs/porto_alegre/" | grep -A 5 -m 1 "TEMPO AGORA"
 #echo ${WEATHERARRAY[@]}
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -275,11 +292,6 @@ function lernotas()
 	echo " para escrever notas: nota exemplo de nota"
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function tackle()
-{
-	wget --proxy=on --proxy-user="vinicios.silva" --proxy-password="hpco2039!" $1
-}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function real()
 {
 	`which $1` $2
@@ -295,6 +307,30 @@ function final_frontier()
   fi
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function monta()
+{
+
+date=`date +"%d%m%y%M%S"`
+
+  if [ ! -z $1 ]; then
+    mkdir /mnt/tmp_${date}
+    mount $1 /mnt/tmp_${date}
+    nautilus /mnt/tmp_${date}
+    umount /mnt/tmp_${date}
+  else echo "ERROR in USE: correct is: monta /dev/sdX , pay attention to sudo command"
+  fi
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function encFpg()
+{
+	gpg --symmetric --cipher-algo aes256 -o $1.gpg $1
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function decFpg()
+{
+	gpg -d $1 | tar xzvf -
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function au()
 {
 	echo "ALL BASHRC FUNCTIONS:"
@@ -306,14 +342,16 @@ function au()
 	echo "  headquarter <y> <z>    Receives one file from LAN, works with cherami cmd"
 	echo "  ip                     Shows all configured IPs"
 	echo "  snn <param>            Creates an alias for ethernet names, the param will be the network."
-	echo "  rmv                    Fake rm, this one executes a move of file to .Trash. see cmd: real rm"
+	echo "  rm                     Fake rm, this one executes a move of file to .Trash. see cmd: real rm"
 	echo "  canopener <param>      Expands any type of compacted file"
 	echo "  tempoloko              Checks the local weather"
 	echo "  nota <param>           Creates a mental note with text of param"
 	echo "  lernotas               Just reads all saved notes"
-	echo "  tackle <URL>           Pulls the specific file from URL"
 	echo "  real <param>           Invokes the real program without aliases, or bash's functions"
 	echo "  final_frontier <param> Calculates the amount SPACE of the param dirs and subdirs in 1st level"
+	echo "  monta <param>          mount device in param "
+    echo "  encFpg <tar-file>  Encrypt tar file"
+	echo "  decFpg <tar-file>  Dencrypt tar file"
 }
 # http://www.tempoagora.com.br/previsaodotempo.html/brasil/PortoAlegre-RS/
 ###############################################################################################
@@ -327,10 +365,17 @@ function au()
 ########################################################################
 # LICENSES PARA AS FERRAMENTAS DE CAD
 ########################################################################
+export MGLS_LICENSE_FILE=27004@naxos.inf.pucrs.br
+export CCSS_KEYS=27000@naxos.inf.pucrs.br
+export SNPSLMD_LICENSE_FILE=27000@naxos.inf.pucrs.br
+export XILINXD_LICENSE_FILE=2100@naxos.inf.pucrs.br
 
 ############################################
 # INCLUSAO DAS FERRAMENTAS NO PATH #
 ############################################
+export PATH=$PATH:/soft/modeltech/bin
+#source /opt/Xilinx/11.4/settings32.sh
+export PATH=$PATH:/sbin
 
 ###########################################
 # modificações de configuração do shell
@@ -358,16 +403,17 @@ fi
 ###########
 #Rapid Alias
 ###########
-alias eos='cd ~/elinux/eos/scripts'
-alias aurora='cd ~/elinux/eos/scripts'
 alias cpsmoketofrank='scp -r Smoke/ acesso@192.168.20.151:./Smoke'
 alias diane='cd ~/elinux/diane' 
 alias bashrc=' vim ~/.bashrc' 
 alias vazari='exit'
-alias lock='gnome-screensaver-command -l'
-
-#######
-#coisas perigosas
-#######
-/home/vinicios/scripts/bearSSH/dog.sh &
-
+alias rmtglock='export DISPLAY=:0 && gnome-screensaver-command -l'
+alias rmtxlock='export DISPLAY=:0 && xlock'
+alias enableapproves="sudo mv /home/vinicios/Documents/meme/Bryan_Approves.png /var/www/approves"
+alias enabledisapproves="sudo mv /home/vinicios/Documents/meme/Bryan_Meme.png /var/www/disapproves"
+alias disableapproves="sudo rm /var/www/approves"
+alias disabledisapproves="sudo rm /var/www/disapproves"
+alias bc="bc -l"
+alias xkcd="~/Dropbox/scripts/get_comics/pull-xkcd/pull_xkcd.sh"
+alias cyanide="~/Dropbox/scripts/get_comics/pull-xkcd/pull_cyanide.sh"
+alias dilbert="~/Dropbox/scripts/get_comics/pull-xkcd/pull_dilbert.sh"
