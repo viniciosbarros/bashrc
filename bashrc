@@ -150,18 +150,18 @@ else
 fi
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function aguaquente() # Start a timer to check warming of water for tea
-{
-	if [ $# -ne 0 -o -z $1 ]; then
-		sleep $1
-		echo "AGUA QUENTE" | osd_cat -p middle -A center -c red --font=-*-*-*-*-*-*-*-290-*-*-*-*-iso8859-* -O 5 -d 2
-	else
-		echo " "
-		echo " 'Agua Quente' Is a bash function to create a countdown in seconds"
-		echo " Usage:"
-		echo "   $ aguaquente  <Time> "
-	fi
-}
+#function aguaquente() # Start a timer to check warming of water for tea
+# {
+#	if [ $# -ne 0 -o -z $1 ]; then
+#		sleep $1
+#		echo "AGUA QUENTE" | osd_cat -p middle -A center -c red --font=-*-*-*-*-*-*-*-290-*-*-*-*-iso8859-* -O 5 -d 2
+#	else
+#		echo " "
+#		echo " 'Agua Quente' Is a bash function to create a countdown in seconds"
+#		echo " Usage:"
+#		echo "   $ aguaquente  <Time> "
+#	fi
+# }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function cherami() # Send file using nc and cat
 {
@@ -417,3 +417,4 @@ alias bc="bc -l"
 alias xkcd="~/Dropbox/scripts/get_comics/pull-xkcd/pull_xkcd.sh"
 alias cyanide="~/Dropbox/scripts/get_comics/pull-xkcd/pull_cyanide.sh"
 alias dilbert="~/Dropbox/scripts/get_comics/pull-xkcd/pull_dilbert.sh"
+alias aguaquente="/home/vinicios/Dropbox/scripts/timerCook/timer.sh"
