@@ -187,6 +187,11 @@ VAL=2
 	fi
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function lstm() #list some lines of mail file
+{
+    tail -n 50 /var/mail/$(whoami)
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function headquarter() # Receive text file using nc and cat
 {
 	if [ $# -ne 1 -o -z $1 ]; then
@@ -330,6 +335,15 @@ function decFpg()
 {
 	gpg -d $1 | tar xzvf -
 }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function indent_knf()
+{
+    indent -bap -br -ce -ci4 -cli0 -d0 -di0 -i8 -ip 0 -l79 -nbc -ncdb -ndj -nfc1 -nlp -npcs -psl -sc -sob $1
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Quite interresting auto-complete for SSHing :D
+# host names already in the bash history
+complete -W "$(echo $(grep '^ssh ' ~/.bash_history | sort -u | sed 's/^ssh //'))" ssh
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function au()
 {
