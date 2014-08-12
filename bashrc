@@ -244,10 +244,11 @@ function rm()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function lixeira()
 {
+	echo "  in: ~/.local/share/Trash/files"
 	ls -l ~/.local/share/Trash/files
 } 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-canopener()
+function canopener()
 {
     for file in "$@"
     do
@@ -347,7 +348,7 @@ complete -W "$(echo $(grep '^ssh ' ~/.bash_history | sort -u | sed 's/^ssh //'))
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function au()
 {
-	echo "ALL BASHRC FUNCTIONS:"
+	echo "(legacy) ALL (not all) BASHRC FUNCTIONS:"
 	echo " "
 	echo "  cd                     Same command like always but will show files in the respective directory"
 	echo "  chmod                  If you forgot to pass the chmod value, it will wait for it."
@@ -366,6 +367,12 @@ function au()
 	echo "  monta <param>          mount device in param "
     echo "  encFpg <tar-file>  Encrypt tar file"
 	echo "  decFpg <tar-file>  Dencrypt tar file"
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+function vinihelp()
+{
+	echo "	Available functions in bashrc:"
+	grep function ~/.bashrc | grep -v ^# | grep '()' | awk  '{ print("\t",$2); }'
 }
 # http://www.tempoagora.com.br/previsaodotempo.html/brasil/PortoAlegre-RS/
 ###############################################################################################
